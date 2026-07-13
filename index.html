@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurante Avenida's — Churrasco de Verdade em Artur Nogueira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #17120F;
+    --bg-card: #241B16;
+    --ember: #D9531E;
+    --ember-dark: #9C3A15;
+    --gold: #E8A33D;
+    --cream: #F2E8DC;
+    --cream-dim: #C9BBA9;
+    --brown: #3D2318;
+    --char: #100C09;
+    --line: rgba(242,232,220,0.1);
+    --win: #6FAE6B;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background: var(--bg);
+    color: var(--cream);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{ font-family:'Bitter', serif; font-weight:900; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 24px; }
+  button{ font-family:inherit; }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion: reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+
+  /* NAV */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+    background:linear-gradient(180deg, rgba(23,18,15,0.95), rgba(23,18,15,0));
+    backdrop-filter:blur(4px);
+  }
+  nav .brand{ display:flex; align-items:center; gap:10px; font-family:'Bitter',serif; font-weight:900; font-size:1.2rem; letter-spacing:0.5px; }
+  nav .brand span{ color:var(--ember); }
+  .nav-logo{
+    width:38px; height:38px; border-radius:50%; object-fit:cover; flex-shrink:0;
+    box-shadow:0 3px 0 rgba(0,0,0,.5), 0 6px 12px rgba(0,0,0,.5), 0 0 0 2px rgba(232,163,61,.6);
+  }
+  @media(max-width:480px){
+    nav{ padding:12px 16px; }
+    .nav-logo{ width:32px; height:32px; }
+    nav .brand{ font-size:1rem; gap:8px; }
+    .btn-wpp span.wpp-text{ display:none; }
+    .btn-wpp{ padding:10px 14px; }
+  }
+  .btn-wpp{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ember); color:var(--cream);
+    padding:10px 18px; border-radius:100px;
+    font-weight:600; font-size:0.9rem;
+    box-shadow:0 4px 20px rgba(217,83,30,0.35);
+    transition:transform .2s ease, box-shadow .2s ease;
+    border:none; cursor:pointer;
+  }
+  .btn-wpp:hover{ transform:translateY(-2px); box-shadow:0 6px 26px rgba(217,83,30,0.5); }
+  .btn-wpp svg{ width:18px; height:18px; flex-shrink:0; }
+
+  /* HERO */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:120px 24px 60px;
+    overflow:hidden;
+  }
+  .ember-glow{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(217,83,30,0.35), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 30% 90%, rgba(232,163,61,0.15), transparent 70%);
+    animation:emberPulse 6s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes emberPulse{
+    0%,100%{ opacity:0.7; }
+    50%{ opacity:1; }
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem;
+    letter-spacing:2px; text-transform:uppercase; color:var(--gold);
+    margin-bottom:20px; position:relative; z-index:2;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 8vw, 5rem);
+    line-height:1.02;
+    color:var(--cream);
+    position:relative; z-index:2;
+    max-width:900px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--ember); }
+  .hero p.sub{
+    max-width:520px; margin:22px auto 0;
+    color:var(--cream-dim); font-size:1.05rem;
+    position:relative; z-index:2;
+  }
+
+  @keyframes smokeRise{
+    0%{ transform:translateY(0) scale(0.6); opacity:0; }
+    20%{ opacity:.5; }
+    100%{ transform:translateY(-160px) scale(1.6); opacity:0; }
+  }
+
+  .hero-ctas{
+    display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+    position:relative; z-index:2;
+  }
+  .btn-ghost{
+    display:inline-flex; align-items:center; gap:8px;
+    border:1px solid var(--line); padding:10px 18px; border-radius:100px;
+    font-weight:600; font-size:0.9rem; color:var(--cream);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--gold); background:rgba(232,163,61,0.08); }
+  .btn-ghost svg{ width:18px; height:18px; }
+  .rating-chip{
+    margin-top:38px; display:inline-flex; align-items:center; gap:10px;
+    padding:10px 16px; border:1px solid var(--line); border-radius:100px;
+    font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--cream-dim);
+    position:relative; z-index:2;
+  }
+  .rating-chip strong{ color:var(--gold); }
+
+  /* DIVIDER — signature smoke line */
+  .smoke-divider{
+    position:relative; height:64px; overflow:hidden;
+  }
+  .smoke-divider::before{
+    content:''; position:absolute; left:0; right:0; top:50%;
+    height:2px; transform:translateY(-50%);
+    background:linear-gradient(90deg, transparent, var(--ember) 20%, var(--gold) 50%, var(--ember) 80%, transparent);
+    animation:emberFlow 4s linear infinite;
+    background-size:200% 100%;
+  }
+  @keyframes emberFlow{
+    0%{ background-position:0% 0; }
+    100%{ background-position:200% 0; }
+  }
+
+  /* SECTION LABELS */
+  .section{ padding:90px 0; }
+  .section-head{ text-align:center; margin-bottom:52px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{ font-size:clamp(1.9rem, 4.5vw, 2.6rem); }
+  .section-head p{ color:var(--cream-dim); max-width:480px; margin:14px auto 0; }
+
+  /* MENU TEASER */
+  .dishes{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  }
+  @media(max-width:820px){ .dishes{ grid-template-columns:1fr; } }
+  .dish-card{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius:18px; overflow:hidden;
+    transition:transform .1s ease, border-color .25s ease, box-shadow .25s ease;
+    transform-style:preserve-3d; will-change:transform;
+  }
+  .dish-card:hover{ border-color:var(--ember); box-shadow:0 18px 40px rgba(0,0,0,.35); }
+  .dish-photo{
+    height:200px; position:relative; overflow:hidden;
+    background:
+      linear-gradient(0deg, rgba(0,0,0,.4), rgba(0,0,0,0) 55%),
+      repeating-linear-gradient(100deg, rgba(0,0,0,.28) 0 6px, transparent 6px 26px),
+      radial-gradient(ellipse at 28% 18%, rgba(232,163,61,.3), transparent 60%),
+      linear-gradient(135deg, var(--brown), var(--ember-dark));
+    display:flex; align-items:flex-end; padding:14px;
+  }
+  .dish-photo .dsmoke{
+    position:absolute; width:14px; height:14px; border-radius:50%;
+    background:rgba(242,232,220,.3); filter:blur(5px);
+    animation:smokeRise 4s ease-in infinite;
+  }
+  .dish-photo span{
+    font-family:'JetBrains Mono',monospace; font-size:0.7rem;
+    color:rgba(242,232,220,0.6); letter-spacing:0.5px; position:relative; z-index:2;
+  }
+  .dish-body{ padding:22px; }
+  .dish-body h3{ font-size:1.2rem; margin-bottom:8px; }
+  .dish-body p{ color:var(--cream-dim); font-size:0.92rem; margin-bottom:16px; }
+  .dish-link{
+    font-family:'JetBrains Mono',monospace; font-size:0.8rem;
+    color:var(--gold); display:inline-flex; align-items:center; gap:6px;
+  }
+
+  /* MONTE SEU MARMITEX */
+  .builder{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:22px;
+    padding:36px; display:grid; grid-template-columns:1.3fr 1fr; gap:36px;
+  }
+  @media(max-width:820px){ .builder{ grid-template-columns:1fr; padding:26px; } }
+  .builder-group{ margin-bottom:26px; }
+  .builder-group:last-child{ margin-bottom:0; }
+  .builder-label{
+    font-family:'JetBrains Mono',monospace; font-size:0.75rem; text-transform:uppercase;
+    letter-spacing:1px; color:var(--gold); margin-bottom:12px; display:block;
+  }
+  .pill-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .pill{
+    position:relative; cursor:pointer;
+  }
+  .pill input{ position:absolute; opacity:0; inset:0; cursor:pointer; }
+  .pill-face{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 16px; border-radius:100px; border:1px solid var(--line);
+    font-size:0.9rem; font-weight:600; transition:all .18s ease;
+  }
+  .pill input:checked + .pill-face{
+    background:var(--ember); border-color:var(--ember); color:var(--cream);
+    box-shadow:0 4px 16px rgba(217,83,30,.4);
+  }
+  .pill input:disabled + .pill-face{ opacity:.35; cursor:not-allowed; }
+  .check-row{ display:flex; flex-direction:column; gap:10px; }
+  .check-item{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border:1px solid var(--line); border-radius:12px; cursor:pointer;
+    transition:border-color .18s ease, background .18s ease;
+  }
+  .check-item:has(input:checked){ border-color:var(--gold); background:rgba(232,163,61,.07); }
+  .check-item input{ accent-color:var(--ember); width:17px; height:17px; }
+  .check-item .ci-name{ font-size:0.92rem; }
+  .check-item .ci-price{ font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--cream-dim); }
+  .check-item.disabled{ opacity:.35; pointer-events:none; }
+  .builder-summary{
+    background:var(--bg); border:1px solid var(--line); border-radius:16px; padding:26px;
+    display:flex; flex-direction:column; justify-content:space-between; height:100%;
+  }
+  .summary-line{ display:flex; justify-content:space-between; font-size:0.88rem; color:var(--cream-dim); padding:6px 0; border-bottom:1px dashed var(--line); }
+  .summary-total{ display:flex; justify-content:space-between; align-items:baseline; margin:18px 0; }
+  .summary-total .tot-label{ font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--cream-dim); text-transform:uppercase; letter-spacing:1px; }
+  .summary-total .tot-value{ font-family:'Bitter',serif; font-size:2.1rem; color:var(--gold); }
+  .builder-hint{ font-size:0.78rem; color:var(--cream-dim); margin-top:4px; }
+  .meat-input{
+    width:100%; background:var(--bg-card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; font-family:'Work Sans',sans-serif; font-size:0.95rem; color:var(--cream);
+    transition:border-color .18s ease, background .18s ease;
+  }
+  .meat-input::placeholder{ color:var(--cream-dim); opacity:.7; }
+  .meat-input:focus{ outline:none; border-color:var(--gold); background:rgba(232,163,61,.06); }
+
+  /* ROLETA DA SORTE */
+  .roleta-wrap{
+    display:grid; grid-template-columns:auto 1fr; gap:48px; align-items:center;
+    background:var(--bg-card); border:1px solid var(--line); border-radius:22px; padding:40px;
+  }
+  @media(max-width:820px){ .roleta-wrap{ grid-template-columns:1fr; justify-items:center; text-align:center; padding:28px; } }
+  .wheel-holder{ position:relative; width:260px; height:260px; flex-shrink:0; }
+  .wheel-pointer{
+    position:absolute; top:-6px; left:50%; margin-left:-11px; z-index:5;
+    width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent;
+    border-top:20px solid var(--gold); filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
+  }
+  .wheel{
+    width:100%; height:100%; border-radius:50%; position:relative;
+    border:6px solid var(--brown); box-shadow:0 0 0 3px var(--gold), 0 20px 50px rgba(0,0,0,.5);
+    transition:transform 4.5s cubic-bezier(.12,.7,.1,1);
+    background:conic-gradient(
+      var(--ember) 0deg 45deg, var(--brown) 45deg 90deg,
+      var(--ember) 90deg 135deg, var(--brown) 135deg 180deg,
+      var(--ember) 180deg 225deg, var(--brown) 225deg 270deg,
+      var(--ember) 270deg 315deg, var(--brown) 315deg 360deg
+    );
+  }
+  .wheel-label{
+    position:absolute; top:50%; left:50%; width:110px; height:20px;
+    margin-top:-10px; transform-origin:0 50%;
+    font-family:'JetBrains Mono',monospace; font-size:0.62rem; font-weight:700;
+    color:var(--cream); text-align:right; padding-right:14px; letter-spacing:.2px;
+  }
+  .wheel-center{
+    position:absolute; top:50%; left:50%; width:56px; height:56px; margin:-28px 0 0 -28px;
+    border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,.5); z-index:4; border:4px solid var(--bg-card);
+  }
+  .wheel-center svg{ width:24px; height:24px; color:var(--char); }
+  .roleta-copy h2{ font-size:clamp(1.7rem,4vw,2.3rem); margin-bottom:14px; }
+  .roleta-copy p{ color:var(--cream-dim); max-width:440px; margin-bottom:22px; }
+  .spin-btn{
+    background:var(--gold); color:var(--char); border:none; padding:14px 26px; border-radius:100px;
+    font-weight:700; font-size:0.95rem; cursor:pointer; box-shadow:0 6px 20px rgba(232,163,61,.35);
+    transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+  }
+  .spin-btn:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 8px 26px rgba(232,163,61,.5); }
+  .spin-btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .roleta-note{ font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--cream-dim); margin-top:14px; opacity:.7; }
+  .prize-result{
+    margin-top:20px; padding:16px 20px; border-radius:14px; border:1px solid var(--gold);
+    background:rgba(232,163,61,.08); display:none;
+  }
+  .prize-result.show{ display:block; }
+  .prize-result .pr-label{ font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--gold); }
+  .prize-result .pr-value{ font-family:'Bitter',serif; font-size:1.3rem; margin:6px 0 12px; }
+
+  /* TESTIMONIALS */
+  .testimonials{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  }
+  @media(max-width:820px){ .testimonials{ grid-template-columns:1fr; } }
+  .t-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:18px;
+    padding:26px;
+  }
+  .stars{ color:var(--gold); font-size:0.95rem; margin-bottom:14px; letter-spacing:2px; }
+  .t-card p{ color:var(--cream); font-size:0.98rem; margin-bottom:16px; }
+  .t-name{ font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--cream-dim); }
+
+  /* LOCATION */
+  .location-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:stretch;
+  }
+  @media(max-width:820px){ .location-grid{ grid-template-columns:1fr; } }
+  .map-box{
+    border-radius:18px; overflow:hidden; border:1px solid var(--line); min-height:340px;
+  }
+  .map-box iframe{ width:100%; height:100%; min-height:340px; border:0; filter:grayscale(0.2) contrast(1.05); }
+  .loc-info{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:18px;
+    padding:32px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .loc-info h3{ font-size:1.4rem; margin-bottom:18px; }
+  .loc-row{ display:flex; gap:12px; margin-bottom:16px; align-items:flex-start; }
+  .loc-row svg{ width:20px; height:20px; color:var(--gold); flex-shrink:0; margin-top:2px; }
+  .loc-row .label{ font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--cream-dim); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:2px; }
+  .loc-row .value{ font-size:0.98rem; }
+
+  /* FOOTER */
+  footer{
+    background:var(--brown); padding:60px 0 32px;
+    border-top:1px solid var(--line);
+  }
+  .footer-grid{
+    display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:40px; margin-bottom:48px;
+  }
+  @media(max-width:720px){ .footer-grid{ grid-template-columns:1fr; gap:32px; } }
+  footer h4{ font-family:'JetBrains Mono',monospace; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--gold); margin-bottom:16px; }
+  .footer-brand h3{ font-size:1.6rem; margin-bottom:10px; }
+  .footer-brand p{ color:var(--cream-dim); font-size:0.92rem; max-width:280px; }
+  .hours-table{ font-family:'JetBrains Mono',monospace; font-size:0.85rem; }
+  .hours-table div{ display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px dashed var(--line); color:var(--cream-dim); }
+  .hours-table div span:last-child{ color:var(--cream); }
+  .social-row{ display:flex; gap:12px; margin-top:16px; }
+  .social-btn{
+    width:42px; height:42px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .social-btn:hover{ border-color:var(--gold); background:rgba(232,163,61,0.1); }
+  .social-btn svg{ width:19px; height:19px; }
+  .contact-list a{ display:block; margin-bottom:10px; font-size:0.95rem; color:var(--cream-dim); }
+  .contact-list a:hover{ color:var(--gold); }
+  .fine-print{ text-align:center; color:var(--cream-dim); font-size:0.8rem; padding-top:24px; border-top:1px solid var(--line); }
+
+  /* FLOATING WHATSAPP (mobile) */
+  .float-wpp{
+    position:fixed; bottom:20px; right:20px; z-index:200;
+    width:58px; height:58px; border-radius:50%;
+    background:var(--ember); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 24px rgba(217,83,30,0.5);
+    animation:floatPulse 2.4s ease-in-out infinite;
+  }
+  .float-wpp svg{ width:28px; height:28px; }
+  @keyframes floatPulse{
+    0%,100%{ box-shadow:0 6px 24px rgba(217,83,30,0.5); }
+    50%{ box-shadow:0 6px 30px rgba(217,83,30,0.8); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><img class="nav-logo" src="data:image/jpeg;base64,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" alt="Logo Restaurante Avenida's">Avenida's <span>•</span></div>
+  <a class="btn-wpp" href="https://wa.me/5519993632245?text=Oi!%20Vim%20pelo%20site%20e%20quero%20fazer%20um%20pedido." target="_blank">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.44.79 3.06 1.2 4.72 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.83 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.89-1.25-4.77-4.16-4.92-4.35-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.28.58-.35.78-.35.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2.01.9 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.36-.42.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.42.11.58-.07.16-.18.68-.79.87-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.19.51.3.06.11.06.63-.18 1.31z"/></svg>
+    <span class="wpp-text">Pedir no WhatsApp</span>
+  </a>
+</nav>
+
+<section class="hero">
+  <div class="ember-glow"></div>
+  <div class="eyebrow">Bairro São Vicente · Artur Nogueira/SP</div>
+  <h1>O churrasco no bafo que <em>não sai da cabeça.</em></h1>
+  <p class="sub">Tempero de casa, carnes de primeira e marmitex generoso — todos os dias.</p>
+
+  <div class="hero-ctas">
+    <a class="btn-wpp" href="https://wa.me/5519993632245?text=Oi!%20Vim%20pelo%20site%20e%20quero%20fazer%20um%20pedido." target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.44.79 3.06 1.2 4.72 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.83 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.89-1.25-4.77-4.16-4.92-4.35-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.28.58-.35.78-.35.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2.01.9 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.36-.42.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.42.11.58-.07.16-.18.68-.79.87-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.19.51.3.06.11.06.63-.18 1.31z"/></svg>
+      Fazer pedido agora
+    </a>
+    <a class="btn-ghost" href="https://www.instagram.com/restaurante_avenidas_an/" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      Instagram
+    </a>
+    <a class="btn-ghost" href="#localizacao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 0114 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      Como chegar
+    </a>
+  </div>
+  <div class="rating-chip">★★★★★ &nbsp;<strong>4.3</strong> no Google · avaliado por quem já provou</div>
+</section>
+
+<div class="smoke-divider"></div>
+
+<section class="section" id="cardapio">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Direto da brasa</div>
+      <h2>Uma prova do que te espera</h2>
+      <p>Uma amostra do cardápio — o resto você descobre chamando no WhatsApp.</p>
+    </div>
+    <div class="dishes">
+      <div class="dish-card reveal">
+<div class="dish-photo"><img src="images/1.png" alt="Costela no Bafo"></div>
+        <div class="dish-body">
+          <h3>Costela no Bafo</h3>
+          <p>Horas de fogo baixo até desmanchar. Acompanha farofa e vinagrete da casa.</p>
+          <a class="dish-link" href="https://wa.me/5519993632245?text=Oi!%20Quero%20saber%20mais%20sobre%20a%20Costela%20no%20Bafo." target="_blank">Quero provar →</a>
+        </div>
+      </div>
+      <div class="dish-card reveal">
+        <div class="dish-photo"> <img src="images/2.png" alt="Salada"></div>
+        <div class="dish-body">
+          <h3>Buffet inclusive nas saladas</h3>
+          <p>temperado do jeito que só a melhor casa de churrasco sabe fazer.</p>
+          <a class="dish-link" href="https://wa.me/5519993632245?text=Oi!%20Quero%20saber%20mais%20sobre%20o%20Frango%20Assado." target="_blank">Quero provar →</a>
+        </div>
+      </div>
+      <div class="dish-card reveal">
+        <div class="dish-photo"> <img src="images/3.png" alt="Salada"></div>
+        <div class="dish-body">
+          <h3>Marmitex Especial</h3>
+          <p>Escolha até 3 tipos de carne, em tamanho P, M ou G. Entrega rápida.</p>
+          <a class="dish-link" href="#monte" >Montar o meu ↓</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="monte">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Sob medida</div>
+      <h2>Monte seu Marmitex</h2>
+      <p>Escolha o tamanho, diga qual carne prefere e leve pronto pro WhatsApp.</p>
+    </div>
+
+    <div class="builder reveal">
+      <div>
+        <div class="builder-group">
+          <span class="builder-label">Tamanho</span>
+          <div class="pill-row">
+            <label class="pill">
+              <input type="radio" name="size" value="P" data-max="1" data-price="18.90" checked>
+              <span class="pill-face">P · R$ 18,90</span>
+            </label>
+            <label class="pill">
+              <input type="radio" name="size" value="M" data-max="2" data-price="24.90">
+              <span class="pill-face">M · R$ 24,90</span>
+            </label>
+            <label class="pill">
+              <input type="radio" name="size" value="G" data-max="3" data-price="29.90">
+              <span class="pill-face">G · R$ 29,90</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="builder-group">
+          <span class="builder-label">Carne (como preferir)</span>
+          <input type="text" id="meatPref" class="meat-input" placeholder="Ex.: costela e frango, ou 'a gosto'">
+        </div>
+
+        <div class="builder-group">
+          <span class="builder-label">Extras</span>
+          <div class="check-row">
+            <label class="check-item">
+              <span class="ci-name">Salada extra</span>
+              <span class="ci-price">
+                <input type="checkbox" id="extraSalada" data-price="5.00"> R$ 5,00
+              </span>
+            </label>
+            <label class="check-item">
+              <span class="ci-name">Batata frita</span>
+              <span class="ci-price">
+                <input type="checkbox" id="extraBatata" data-price="8.00"> R$ 8,00
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="builder-summary">
+        <div>
+          <div class="summary-line"><span>Tamanho</span><span id="sumSize">—</span></div>
+          <div class="summary-line"><span>Carne</span><span id="sumMeats">—</span></div>
+          <div class="summary-line"><span>Extras</span><span id="sumExtras">—</span></div>
+          <div class="summary-total">
+            <span class="tot-label">Total</span>
+            <span class="tot-value" id="sumTotal">R$ 0,00</span>
+          </div>
+          <p class="builder-hint">Preço final confirmado no WhatsApp.</p>
+        </div>
+        <a class="btn-wpp" id="orderBtn" style="margin-top:20px; justify-content:center;" href="#" target="_blank">Pedir no WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="roleta">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">🔥 Ao vivo no site</div>
+      <h2>Roleta do Dia Avenida's</h2>
+      <p>Um giro por visita. Sem cupom, sem pegadinha — só uma frase boa pra levar com você hoje.</p>
+    </div>
+
+    <div class="roleta-wrap reveal">
+      <div class="wheel-holder">
+        <div class="wheel-pointer"></div>
+        <div class="wheel" id="wheel">
+          <span class="wheel-label" style="transform:rotate(22.5deg);">☀️</span>
+          <span class="wheel-label" style="transform:rotate(67.5deg);">🔥</span>
+          <span class="wheel-label" style="transform:rotate(112.5deg);">💛</span>
+          <span class="wheel-label" style="transform:rotate(157.5deg);">✨</span>
+          <span class="wheel-label" style="transform:rotate(202.5deg);">🙌</span>
+          <span class="wheel-label" style="transform:rotate(247.5deg);">🍖</span>
+          <span class="wheel-label" style="transform:rotate(292.5deg);">🌟</span>
+          <span class="wheel-label" style="transform:rotate(337.5deg);">😄</span>
+        </div>
+        <div class="wheel-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+        </div>
+      </div>
+      <div class="roleta-copy">
+        <h2>Gire e leve uma frase boa pro seu dia</h2>
+        <p>Clique, gire a roleta e receba uma frase positiva — de graça, só pra deixar seu dia mais leve antes do almoço.</p>
+        <button class="spin-btn" id="spinBtn">Girar a roleta</button>
+        <div class="roleta-note">8 frases possíveis · conteúdo 100% editável pela equipe</div>
+        <div class="prize-result" id="prizeResult">
+          <div class="pr-label">Pra você, hoje</div>
+          <div class="pr-value" id="prizeValue">—</div>
+          <a class="btn-wpp" id="prizeBtn" href="#" target="_blank">Pedir no WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-card); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Quem já provou, aprova</div>
+      <h2>O que dizem no Google</h2>
+    </div>
+    <div class="testimonials">
+      <div class="t-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>Comida muito bem temperada, salada fresquinha e decoração caprichada — todo mundo saiu satisfeito e de bem com a vida.</p>
+        <div class="t-name">— Avaliação Google, almoço em família</div>
+      </div>
+      <div class="t-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>Churrasco na medida certa, serviço atencioso e um ambiente gostoso pra almoçar com calma.</p>
+        <div class="t-name">— Avaliação Google, churrasco</div>
+      </div>
+      <div class="t-card reveal">
+        <div class="stars">★★★★★</div>
+        <p>Casa cheia todo dia por um motivo: tempero caseiro que lembra comida de mãe.</p>
+        <div class="t-name">— Avaliação Google, cliente frequente</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="localizacao">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Onde estamos</div>
+      <h2>Bairro São Vicente, Artur Nogueira</h2>
+    </div>
+    <div class="location-grid reveal">
+      <div class="map-box">
+        <iframe src="https://www.google.com/maps?q=Restaurante+Avenida's,+Rua+XV+de+Novembro,+934,+Artur+Nogueira,+SP&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="loc-info">
+        <h3>Restaurante Avenida's</h3>
+        <div class="loc-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 0114 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div><span class="label">Endereço</span><span class="value">R. XV de Novembro, 934 — São Vicente, Artur Nogueira/SP, 13160-000</span></div>
+        </div>
+        <div class="loc-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <div><span class="label">Horário</span><span class="value">Seg a sáb, 10h30 às 15h · Dom fechado <em style="opacity:.6">(confirmar)</em></span></div>
+        </div>
+        <div class="loc-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.12.9.36 1.78.7 2.61a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.47-1.27a2 2 0 012.11-.45c.83.34 1.71.58 2.61.7A2 2 0 0122 16.92z"/></svg>
+          <div><span class="label">WhatsApp / Delivery</span><span class="value">(19) 99363-2245</span></div>
+        </div>
+        <a class="btn-wpp" style="margin-top:12px; justify-content:center;" href="https://www.google.com/maps/dir/?api=1&destination=Restaurante+Avenida's,+Rua+XV+de+Novembro,+934,+Artur+Nogueira,+SP" target="_blank">Traçar rota</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Avenida's</h3>
+        <p>Churrasco, marmitex e comida caseira no coração de Artur Nogueira desde sempre.</p>
+        <div class="social-row">
+          <a class="social-btn" href="https://wa.me/5519993632245" target="_blank" title="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.44.79 3.06 1.2 4.72 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/></svg>
+          </a>
+          <a class="social-btn" href="https://www.instagram.com/restaurante_avenidas_an/" target="_blank" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a class="social-btn" href="https://www.google.com/maps/dir/?api=1&destination=Restaurante+Avenida's,+Rua+XV+de+Novembro,+934,+Artur+Nogueira,+SP" target="_blank" title="Google Maps">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 0114 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4>Horário</h4>
+        <div class="hours-table">
+          <div><span>Segunda</span><span>10h30–15h</span></div>
+          <div><span>Terça</span><span>10h30–15h</span></div>
+          <div><span>Quarta</span><span>10h30–15h</span></div>
+          <div><span>Quinta</span><span>10h30–15h</span></div>
+          <div><span>Sexta</span><span>10h30–15h</span></div>
+          <div><span>Sábado</span><span>10h30–15h</span></div>
+          <div><span>Domingo</span><span>Fechado</span></div>
+        </div>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <div class="contact-list">
+          <a href="https://wa.me/5519993632245">(19) 99363-2245 — WhatsApp</a>
+          <a href="tel:+551938275070">(19) 3827-5070</a>
+          <a href="https://www.instagram.com/restaurante_avenidas_an/">@restaurante_avenidas_an</a>
+          <a href="#localizacao">R. XV de Novembro, 934 — São Vicente</a>
+        </div>
+      </div>
+    </div>
+    <div class="fine-print">© 2026 Restaurante Avenida's · Artur Nogueira/SP</div>
+  </div>
+</footer>
+
+<a class="float-wpp" href="https://wa.me/5519993632245?text=Oi!%20Vim%20pelo%20site%20e%20quero%20fazer%20um%20pedido." target="_blank" aria-label="Chamar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#F2E8DC"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.44.79 3.06 1.2 4.72 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.83 14.13c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.89-1.25-4.77-4.16-4.92-4.35-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.28.58-.35.78-.35.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2.01.9 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.36-.42.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.42.11.58-.07.16-.18.68-.79.87-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.19.51.3.06.11.06.63-.18 1.31z"/></svg>
+</a>
+
+<script>
+  // ---------- scroll reveal ----------
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
+  }, { threshold:0.15 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ---------- dish card 3D tilt (desktop only) ----------
+  if (window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.dish-card').forEach(card=>{
+      card.style.perspective = '700px';
+      card.addEventListener('mousemove', (e)=>{
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left)/r.width - 0.5;
+        const y = (e.clientY - r.top)/r.height - 0.5;
+        card.style.transform = `rotateX(${(-y*8).toFixed(2)}deg) rotateY(${(x*10).toFixed(2)}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', ()=>{ card.style.transform = 'rotateX(0) rotateY(0) translateY(0)'; });
+    });
+  }
+
+  // ---------- Monte seu Marmitex ----------
+  const sizeInputs = document.querySelectorAll('input[name="size"]');
+  const meatPref = document.getElementById('meatPref');
+  const extraSalada = document.getElementById('extraSalada');
+  const extraBatata = document.getElementById('extraBatata');
+  const sumSize = document.getElementById('sumSize');
+  const sumMeats = document.getElementById('sumMeats');
+  const sumExtras = document.getElementById('sumExtras');
+  const sumTotal = document.getElementById('sumTotal');
+  const orderBtn = document.getElementById('orderBtn');
+
+  function recalcBuilder(){
+    const size = document.querySelector('input[name="size"]:checked');
+    const max = parseInt(size.dataset.max, 10);
+    const sizePrice = parseFloat(size.dataset.price);
+    const sizeLabel = size.value + ' · ' + max + (max === 1 ? ' carne' : ' carnes');
+
+    const meatText = meatPref.value.trim();
+
+    let extrasTotal = 0;
+    const extrasNames = [];
+    if (extraSalada.checked){ extrasTotal += parseFloat(extraSalada.dataset.price); extrasNames.push('Salada extra'); }
+    if (extraBatata.checked){ extrasTotal += parseFloat(extraBatata.dataset.price); extrasNames.push('Batata frita'); }
+
+    const total = sizePrice + extrasTotal;
+
+    sumSize.textContent = sizeLabel;
+    sumMeats.textContent = meatText ? meatText : '—';
+    sumExtras.textContent = extrasNames.length ? extrasNames.join(', ') : '—';
+    sumTotal.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+
+    const meatsText = meatText ? meatText : 'a combinar no WhatsApp';
+    const extrasText = extrasNames.length ? ` + ${extrasNames.join(' e ')}` : '';
+    const msg = `Oi! Quero pedir um Marmitex ${size.value} (carne: ${meatsText})${extrasText}. Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+    orderBtn.href = 'https://wa.me/5519993632245?text=' + encodeURIComponent(msg);
+  }
+
+  sizeInputs.forEach(i=>i.addEventListener('change', recalcBuilder));
+  meatPref.addEventListener('input', recalcBuilder);
+  extraSalada.addEventListener('change', recalcBuilder);
+  extraBatata.addEventListener('change', recalcBuilder);
+  recalcBuilder();
+
+  // ---------- Roleta do Dia (frases positivas) ----------
+  const prizes = [
+    { label:'Hoje é um bom dia pra desacelerar e se cuidar um pouco mais. 🌤️' },
+    { label:'Você tá indo melhor do que imagina. Continue assim. 🔥' },
+    { label:'Um dia de cada vez — e hoje já é uma vitória. 💛' },
+    { label:'Coisas boas estão vindo, mesmo que ainda não pareça. ✨' },
+    { label:'Você merece uma pausa gostosa e uma comida de verdade hoje. 🙌' },
+    { label:'Sorria — o cheiro de churrasco já anima qualquer dia. 🍖' },
+    { label:'Confie no seu tempo. Tá tudo se encaixando do jeito certo. 🌟' },
+    { label:'Hoje é um ótimo dia pra sorrir mais e se cobrar menos. 😄' },
+  ];
+  const wheel = document.getElementById('wheel');
+  const spinBtn = document.getElementById('spinBtn');
+  const prizeResult = document.getElementById('prizeResult');
+  const prizeValue = document.getElementById('prizeValue');
+  const prizeBtn = document.getElementById('prizeBtn');
+  let currentRotation = 0;
+  let spinning = false;
+
+  spinBtn.addEventListener('click', ()=>{
+    if (spinning) return;
+    spinning = true;
+    spinBtn.disabled = true;
+    prizeResult.classList.remove('show');
+
+    const segAngle = 360 / prizes.length;
+    const idx = Math.floor(Math.random() * prizes.length);
+    const segMid = idx * segAngle + segAngle / 2;
+    const jitter = (Math.random() - 0.5) * (segAngle * 0.6);
+    const fullSpins = 5 * 360;
+
+    // normalize current rotation to keep numbers from growing unbounded
+    const baseline = currentRotation % 360;
+    const target = fullSpins - segMid + jitter;
+    currentRotation = currentRotation - baseline + target + (Math.floor(currentRotation/360))*360 + 360;
+
+    wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+    setTimeout(()=>{
+      spinning = false;
+      spinBtn.disabled = false;
+      const prize = prizes[idx];
+      prizeValue.textContent = prize.label;
+      prizeResult.classList.add('show');
+      const msg = `Oi! Girei a roleta do site e recebi uma frase boa pro meu dia. Quero fazer um pedido!`;
+      prizeBtn.href = 'https://wa.me/5519993632245?text=' + encodeURIComponent(msg);
+      prizeBtn.textContent = 'Pedir no WhatsApp';
+    }, 4600);
+  });
+</script>
+
+</body>
+</html>
